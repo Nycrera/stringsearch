@@ -40,8 +40,17 @@ public class App {
 			sw.stop();
 			Matches = horspoolScanner.getMatches();
 			comparisonCount = horspoolScanner.getComparisonCount();
+			horspoolScanner.printBadCharacter();
 			break;
 		case "BM":
+			BoyerMorre BoyerScanner = new BoyerMorre(file, Pattern);
+			sw.start();
+			BoyerScanner.Run();
+			sw.stop();
+			Matches = BoyerScanner.getMatches();
+			comparisonCount = BoyerScanner.getComparisonCount();
+			BoyerScanner.printBadCharacter();
+			BoyerScanner.printGoodPrefix();
 			break;
 		default:
 			System.out.println("Invalid Algorithm");
@@ -58,7 +67,8 @@ public class App {
 
 	}
 
-	// Given a list of matches, writes output file with mathing strings marked with <mark> tags.
+	// Given a list of matches, writes output file with mathing strings marked with
+	// <mark> tags.
 	public static void PrintResults(String filePath) throws IOException {
 		int i = 0;
 		int j = 0;

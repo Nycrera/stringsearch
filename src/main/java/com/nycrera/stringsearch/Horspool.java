@@ -3,13 +3,14 @@ package com.nycrera.stringsearch;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Horspool {
 	private int comparisonCount = 0;
 	private List<Integer> File;
 	private List<Integer> Pattern;
 	private List<Integer> Matches = new ArrayList<>();
-	private HashMap<Integer, Integer> badSuffix = new HashMap<>();
+	private HashMap<Integer, Integer> badCharacter = new HashMap<>();
 
 	public int getComparisonCount() {
 		return comparisonCount;
@@ -19,24 +20,24 @@ public class Horspool {
 		return Matches;
 	}
 
-	public HashMap<Integer, Integer> getBadSuffixTable() {
-		return badSuffix;
+	public HashMap<Integer, Integer> getBadCharacterTable() {
+		return badCharacter;
 	}
 
 	public Horspool(List<Integer> inFile, List<Integer> inPattern) {
 		File = inFile;
 		Pattern = inPattern;
-		createBadSuffixTable();
+		createBadCharcterTable();
 	}
 
-	private void createBadSuffixTable() {
+	private void createBadCharcterTable() {
 		int patternLength = Pattern.size();
 
 		for (int i = 0; i < patternLength - 1; i++) {
-			badSuffix.put(patternLength - 1 - i, i + 1);
+			badCharacter.put(Pattern.get(i), patternLength - 1 - i);
 		}
 
-		badSuffix.put(0, patternLength);
+		badCharacter.put(0, patternLength);
 	}
 
 	public void Run() {
@@ -51,7 +52,7 @@ public class Horspool {
 				comparisonCount++;
 				if (Pattern.get(j) == File.get(i - patternLength + 1 + j)) { // Character match
 					j--;
-				}else { // Mismatch detected
+				} else { // Mismatch detected
 					break;
 				}
 			}
@@ -60,10 +61,25 @@ public class Horspool {
 				Matches.add(i - patternLength + 1); // Match detected
 				i++;
 			} else {
-				Integer badSuffixShift = badSuffix.getOrDefault(patternLength - j - 1, patternLength);
-				i += badSuffixShift;
+				Integer badCharacterShift = badCharacter.getOrDefault(Pattern.get(patternLength - 1), patternLength);
+				i += badCharacterShift;
 			}
 
 		}
+	}
+
+	public void printBadCharacter() {
+		System.out.println("--Bad Character Table--");
+		for (Map.Entry<Integer, Integer> entry : badCharacter.entrySet()) {
+			char charval = (char) entry.getKey().byteValue();
+			String character;
+			if (charval == 0)
+				character = "Any Other";
+			else
+				character = String.valueOf(charval);
+			int shiftAmount = entry.getValue();
+			System.out.println(character + " : " + shiftAmount);
+		}
+		System.out.println("-----------------------");
 	}
 }
