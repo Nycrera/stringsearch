@@ -47,9 +47,22 @@ public class BoyerMorre {
 		for (int i=0;i<Pattern.size()-1;i++)
 		{
 			List<Integer> suffix = Pattern.subList(Pattern.size()-1-i,Pattern.size());
-			List<Integer> rest = Pattern.subList(0,Pattern.size()-1-i); 
+			List<Integer> rest = Pattern.subList(0,Pattern.size()-1); 
+			List<Character> charList = new ArrayList<>();
+
+			for (Integer intValue : suffix) {
+			    char charValue = (char) intValue.intValue();
+			    charList.add(charValue);
+			}
 			
-			int d = findSuffix(suffix, rest);
+			List<Character> charList2 = new ArrayList<>();
+
+			for (Integer intValue : rest) {
+			    char charValue = (char) intValue.intValue();
+			    charList2.add(charValue);
+			}
+
+			int d = findSuffix(suffix, rest, Pattern.get(Pattern.size()-2-i));
 			
 			if (d == -1)
 				d = Pattern.size();
@@ -67,7 +80,7 @@ public class BoyerMorre {
 		}
 	}
 	
-	private int findSuffix(List<Integer> suffix, List<Integer> rest) {
+	private int findSuffix(List<Integer> suffix, List<Integer> rest, Integer preChar) {
 				if (rest.size() < suffix.size())
 					return -1;
 				
@@ -97,7 +110,7 @@ public class BoyerMorre {
 						
 					}while (j>-1 && match);
 					// check if the found suffix is preceded by the same character value
-					if (i > 0 && match && rest.get(rest.size()-1) == rest.get(i-1))
+					if (i > 0 && match && preChar == rest.get(i-1))
 					{
 						// then, keep searching to start of the string
 						match = false;
@@ -177,7 +190,7 @@ public class BoyerMorre {
 
 	public void printGoodPrefix() {
 		System.out.println("--Good Prefix Table--");
-		for (Map.Entry<Integer, Integer> entry : badCharacter.entrySet()) {
+		for (Map.Entry<Integer, Integer> entry : goodSuffix.entrySet()) {
 			int shiftAmount = entry.getValue();
 			System.out.println("d("+entry.getKey()+") : " + shiftAmount);
 		}
