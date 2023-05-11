@@ -64,8 +64,7 @@ public class App {
 		System.out.println("Algorithm: " + args[1]);
 		System.out.println("Total Time: " + sw.getElapsedTime() + " ms");
 		System.out.println("Total comparisons: " + comparisonCount);
-		System.out.println("Total match count is " + (markedMatchCount + unMarkedMatchCount));
-		System.out.println("and " + markedMatchCount + " of them are marked in the html file.");
+		System.out.println("Total match count is " + Matches.size());
 		System.out.println("OutputFile: out.html");
 
 	}
@@ -77,33 +76,17 @@ public class App {
 		int j = 0;
 		boolean inTag = false;
 		PrintWriter outFile = new PrintWriter(new FileWriter(filePath));
-		while (i < file.size()) {
-			if (file.get(i) == (int) '<')
-				inTag = true; // TagSetter
-			if (inTag && file.get(i) == (int) '>')
-				inTag = false;
-
-			if (Matches.size() > j && i == Matches.get(j)) {
-				if (!inTag) { // Mark if not in html tag, else skip.
-					outFile.write("<mark>");
-					markedMatchCount++;
-				} else { // in html tag
-					unMarkedMatchCount++;
-				}
-				for (int k = 0; k < Pattern.size(); k++) { // Print pattern
-					outFile.write(file.get(i + k));
-				}
-				if (!inTag) { // Mark if not in html tag, else skip.
-					outFile.write("</mark>");
-				}
-
-				i++;
-				j++;
-			} else {
-				outFile.write(file.get(i));
-				i++;
+		StringBuilder sb = new StringBuilder(fileAsString());
+		for(int l=Matches.size()-1; l>=0; l--) {
+			int start = Matches.get(l);
+			int end = start + Pattern.size();
+			sb.insert(end,"</mark>");
+			while(l >= 1 && (Matches.get(l-1) > Matches.get(l)-Pattern.size())) {
+				l--;
 			}
+			sb.insert(Matches.get(l), "<mark>");
 		}
+		outFile.write(sb.toString());
 		outFile.flush();
 		outFile.close();
 	}
@@ -123,5 +106,14 @@ public class App {
 			System.exit(0);
 		}
 		return chars;
+	}
+	
+	private static String fileAsString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int charValue : file) {
+            char character = (char) charValue;
+            stringBuilder.append(character);
+        }
+        return stringBuilder.toString();
 	}
 }
