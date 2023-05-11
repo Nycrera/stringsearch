@@ -160,11 +160,12 @@ public class BoyerMorre {
 				Matches.add(i - patternLength + 1); // Match detected
 				i++;
 			} else {
+				Integer matchedCharacterCount = (patternLength - 1 - j);
 				// d1 = Max(badCharacterHueristic - successfulmatchcount, 1)
-				Integer badCharacterShift = Math.max(badCharacter.getOrDefault(Pattern.get(patternLength - 1), patternLength) - j, 1);
+				Integer badCharacterShift = Math.max(badCharacter.getOrDefault(File.get(i - patternLength + 1 + j), patternLength) - matchedCharacterCount, 1);
 				
-				Integer goodPrefixShift = goodSuffix.getOrDefault(j, -1);
-				if(j == 0) { // if no match, use d1 as the pattern shift
+				Integer goodPrefixShift = goodSuffix.getOrDefault(matchedCharacterCount, -1);
+				if(matchedCharacterCount == 0) { // if no match, use d1 as the pattern shift
 					i+= badCharacterShift; 
 				}else { // else use max(d1,d2)
 					i += Math.max(badCharacterShift, goodPrefixShift);

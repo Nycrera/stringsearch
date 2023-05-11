@@ -5,13 +5,14 @@ import java.util.*;
 
 /**
  * String Search!
- *
  */
 public class App {
 	static List<Integer> file;
 	static List<Integer> Pattern = new ArrayList<>();
 	static List<Integer> Matches; // Sorted by nature
 	static int comparisonCount;
+	static int markedMatchCount = 0;
+	static int unMarkedMatchCount = 0;
 
 	public static void main(String[] args) throws Exception {
 		if (args.length < 3) { // Three args needed
@@ -58,11 +59,13 @@ public class App {
 			break;
 		}
 
-		PrintResults("out.html");
+		PrintResults("out.html"); // Also sets marked and unmarked match counts.
 
 		System.out.println("Algorithm: " + args[1]);
 		System.out.println("Total Time: " + sw.getElapsedTime() + " ms");
 		System.out.println("Total comparisons: " + comparisonCount);
+		System.out.println("Total match count is " + (markedMatchCount + unMarkedMatchCount));
+		System.out.println("and " + markedMatchCount + " of them are marked in the html file.");
 		System.out.println("OutputFile: out.html");
 
 	}
@@ -83,6 +86,9 @@ public class App {
 			if (Matches.size() > j && i == Matches.get(j)) {
 				if (!inTag) { // Mark if not in html tag, else skip.
 					outFile.write("<mark>");
+					markedMatchCount++;
+				} else { // in html tag
+					unMarkedMatchCount++;
 				}
 				for (int k = 0; k < Pattern.size(); k++) { // Print pattern
 					outFile.write(file.get(i + k));
@@ -91,7 +97,7 @@ public class App {
 					outFile.write("</mark>");
 				}
 
-				i += Pattern.size();
+				i++;
 				j++;
 			} else {
 				outFile.write(file.get(i));

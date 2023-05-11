@@ -61,7 +61,7 @@ public class Horspool {
 				Matches.add(i - patternLength + 1); // Match detected
 				i++;
 			} else {
-				Integer badCharacterShift = badCharacter.getOrDefault(Pattern.get(patternLength - 1), patternLength);
+				Integer badCharacterShift = badCharacter.getOrDefault(File.get(i), patternLength);
 				i += badCharacterShift;
 			}
 
